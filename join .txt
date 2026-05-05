@@ -1,0 +1,121 @@
+create database customer_order_management;
+use customer_order_management;
+
+create table customers(
+customerid int primary key,
+name varchar(50),
+city varchar(50),
+email varchar(50),
+phoneno int not null
+);
+
+create table orders(
+orderid int primary key,
+customerid int,
+foreign key (customerid) references customers(customerid)
+);
+
+
+
+
+
+
+insert into customers values
+(1,"amit","sangamner","amit.gmail",11111),
+(2,"raj","nasik","raj.gmail",2222),
+(3,"rahul","kota","rahul.gmail",3333),
+(4,"myur","mumbai","myur.gmail",4444),
+(6,"shard","pune","shard.gmail",6666),
+(7,"rohit","pune","rohit.gmail",7777);
+
+
+
+
+insert into orders values
+(101,1),
+(102,2),
+(103,3),
+(104,4);
+
+
+
+
+
+select customers.name, orders.orderid
+from customers
+inner join orders
+on customers.customerid=orders.customerid;
+
+
+
+
+select customers.name, orders.orderid
+from customers
+left join orders
+on customers.customerid=orders.customerid;
+
+
+
+
+
+
+
+
+select customers.name, orders.orderid
+from orders
+right join customers
+on customers.customerid=orders.customerid;
+
+
+
+select customers.name, orders.orderid
+from customers
+cross join orders;
+
+
+
+
+
+
+
+
+
+select a.name, b.name, a.city
+from customers a
+join customers b
+on a.city=b.city
+and a.customerid<>b.customerid;
+
+
+
+
+
+select customers.name, orders.orderid
+from customers
+left join orders
+on customers.customerid=orders.customerid
+
+union
+
+select customers.name, orders.orderid
+from customers
+right join orders
+on customers.customerid=orders.customerid;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

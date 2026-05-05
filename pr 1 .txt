@@ -1,0 +1,117 @@
+CREATE DATABASE college_db;
+USE college_db;
+
+
+
+CREATE TABLE student(
+    studentid INT PRIMARY KEY,
+    name VARCHAR(50),
+    mail VARCHAR(50) UNIQUE,
+    age INT,
+    aderess VARCHAR(50)
+);
+
+CREATE TABLE instructor(
+    instructorid INT PRIMARY KEY,
+    name VARCHAR(50),
+    mail VARCHAR(50) UNIQUE,
+    department VARCHAR(50)
+);
+
+CREATE TABLE course(
+    courseid INT PRIMARY KEY,
+    coursename VARCHAR(50),
+    credits INT,
+    instructorid INT,
+    FOREIGN KEY (instructorid) REFERENCES instructor(instructorid)
+);
+
+CREATE TABLE enrollment(
+    enrollmentid INT PRIMARY KEY,
+    studentid INT,
+    courseid INT,
+    FOREIGN KEY (studentid) REFERENCES student(studentid),
+    FOREIGN KEY (courseid) REFERENCES course(courseid)
+);
+
+
+
+INSERT INTO student VALUES
+(101,"ram","ram@gmail.com",21,"samnapur"),
+(102,"shyam","shyam@gmail.com",22,"mumbai"),
+(103,"kran","kran@gmail.com",23,"delhi"),
+(104,"raj","raj@gmail.com",28,"sangamner"),
+(105,"rahul","rahul@gmail.com",21,"nasik");
+
+
+
+
+INSERT INTO instructor VALUES
+(501,"john","john@gmail.com","comp"),
+(502,"carl","carl@gmail.com","it"),
+(503,"james","james@gmail.com","mech"),
+(504,"henry","henry@gmail.com","civil"),
+(505,"jimmy","jimmy@gmail.com","ele");
+
+
+
+
+
+
+
+INSERT INTO course VALUES
+(201,"dbms",4,501),
+(202,"java",7,502),
+(203,"oops",9,503),
+(204,"ds",3,504),
+(205,"os",3,505);
+
+
+
+
+
+INSERT INTO enrollment VALUES
+(301,101,201),
+(302,102,202),
+(303,103,203),
+(304,104,204),
+(305,105,205);
+
+SELECT * FROM student;
+SELECT * FROM instructor;
+SELECT * FROM course;
+SELECT * FROM enrollment;
+
+
+
+
+
+
+
+
+UPDATE student SET age = 25 WHERE studentid = 101;
+
+DELETE FROM student WHERE studentid = 105;
+
+
+
+ALTER TABLE student ADD contact INT;
+
+UPDATE student SET contact = 111111 WHERE studentid = 101;
+UPDATE student SET contact = 222222 WHERE studentid = 102;
+UPDATE student SET contact = 333333 WHERE studentid = 103;
+UPDATE student SET contact = 444444 WHERE studentid = 104;
+
+ALTER TABLE student RENAME COLUMN contact TO phone;
+
+
+
+
+
+
+
+
+
+
+
+

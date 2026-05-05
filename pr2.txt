@@ -1,0 +1,105 @@
+CREATE TABLE student(
+    studentid INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT
+);
+
+CREATE TABLE course(
+    courseid INT PRIMARY KEY,
+    coursename VARCHAR(50)
+);
+
+
+CREATE TABLE enrollment(
+    enrollid INT AUTO_INCREMENT PRIMARY KEY,
+    studentid INT,
+    courseid INT,
+    FOREIGN KEY (studentid) REFERENCES student(studentid),
+    FOREIGN KEY (courseid) REFERENCES course(courseid)
+);
+
+
+
+INSERT INTO student VALUES
+(101,'sattyaa',21),
+(102,'gagan',22),
+(103,'myur',23),
+(104,'smarth',20);
+
+
+INSERT INTO course VALUES
+(1,'DBMS'),
+(2,'AI'),
+(3,'JAVA');
+
+
+
+INSERT INTO enrollment(studentid, courseid) VALUES
+(101,1),
+(102,2),
+(103,1),
+(104,3);
+
+
+SELECT * FROM student;
+SELECT * FROM course;
+SELECT * FROM enrollment;
+
+
+
+
+
+CREATE VIEW student_view AS
+SELECT studentid, name, age
+FROM student;
+
+
+
+SELECT * FROM student_view;
+
+
+UPDATE student_view
+SET name = 'SATYAA'
+WHERE studentid = 101;
+
+
+DELETE FROM student_view
+WHERE studentid = 104;
+
+
+-- indexing
+
+
+EXPLAIN SELECT * FROM student WHERE name='SATYAA';
+
+CREATE INDEX idx_name ON student(name);
+
+
+EXPLAIN SELECT * FROM student WHERE name='sattyaa';
+
+
+CREATE INDEX idx_studentid ON enrollment(studentid);
+
+
+SHOW INDEX FROM student;
+SHOW INDEX FROM enrollment;
+
+
+
+ALTER TABLE student
+RENAME INDEX idx_name TO idx_student_name;
+
+
+
+DROP INDEX idx_studentid ON enrollment;
+
+
+
+
+
+
+
+
+
+
+
