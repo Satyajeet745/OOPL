@@ -1,0 +1,225 @@
+//jdbc student
+
+
+
+
+import java.sql.*;
+import java.util.Scanner;
+
+public class StudentManagement {
+
+    static final String URL =
+        "jdbc:mysql://localhost:3306/STUDENT_DB?useSSL=false&allowPublicKeyRetrieval=true";
+
+    static final String USER = "root";
+    static final String PASSWORD = "satyaa";
+
+    public static void main(String[] args) {
+
+        try {
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            try (
+                Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+                Scanner sc = new Scanner(System.in)
+            ) {
+
+                conn.setAutoCommit(false);
+                System.out.println("Connected Successfully!\n");
+
+                while (true) {
+
+                    try {
+
+                        System.out.println("===== STUDENT MANAGEMENT =====");
+                        System.out.println("1. Add Student");
+                        System.out.println("2. View All Students");
+                        System.out.println("3. Get Student");
+                        System.out.println("4. Update Student Marks");
+                        System.out.println("5. Delete Student");
+                        System.out.println("6. Exit");
+
+                        System.out.print("Choose: ");
+                        int choice = sc.nextInt();
+
+                        switch (choice) {
+
+                            case 1:
+                                sc.nextLine();
+                                System.out.print("Enter Name: ");
+                                String name = sc.nextLine();
+
+                                System.out.print("Enter Age: ");
+                                int age = sc.nextInt();
+                                sc.nextLine();
+
+                                System.out.print("Enter Course: ");
+                                String course = sc.nextLine();
+
+                                System.out.print("Enter Marks: ");
+                                double marks = sc.nextDouble();
+
+                                PreparedStatement psAdd = conn.prepareStatement("INSERT INTO students(name, age, course, marks) VALUES (?, ?, ?, ?)");
+
+                                psAdd.setString(1, name);
+                                psAdd.setInt(2, age);
+                                psAdd.setString(3, course);
+                                psAdd.setDouble(4, marks);
+
+                                psAdd.executeUpdate();
+
+                                conn.commit();
+                                System.out.println("Student Added Successfully!\n");
+                                break;
+
+                            case 2:
+                                ResultSet rs =
+                                    conn.createStatement().executeQuery("SELECT * FROM students");
+
+                                System.out.println("\nID\tName\tAge\tCourse\tMarks");
+                                System.out.println("------------------------------------------------");
+
+                                while (rs.next()) {
+                                    System.out.println(
+                                        rs.getInt("id") + "\t" +
+                                        rs.getString("name") + "\t" +
+                                        rs.getInt("age") + "\t" +
+                                        rs.getString("course") + "\t" +
+                                        rs.getDouble("marks")
+                                    );
+                                }
+                                System.out.println();
+                                break;
+
+                            case 3:
+                                System.out.print("Enter Student ID: ");
+                                int searchId = sc.nextInt();
+
+                                PreparedStatement psSearch =
+                                    conn.prepareStatement("SELECT * FROM students WHERE id=?");
+
+                                psSearch.setInt(1, searchId);
+                                ResultSet student = psSearch.executeQuery();
+
+                                if (student.next()) {
+                                    System.out.println("\nStudent Details");
+                                    System.out.println("----------------------");
+                                    System.out.println("ID: " + student.getInt("id"));
+                                    System.out.println("Name: " + student.getString("name"));
+                                    System.out.println("Age: " + student.getInt("age"));
+                                    System.out.println("Course: " + student.getString("course"));
+                                    System.out.println("Marks: " + student.getDouble("marks"));
+                                    System.out.println();
+
+                                } else {
+
+                                    System.out.println("Student Not Found!\n");
+                                }
+                                break;
+
+                            case 4:
+                                System.out.print("Enter Student ID to Update: ");
+                                int updateId = sc.nextInt();
+
+                                sc.nextLine();
+
+                                System.out.print("Enter New Age: ");
+                                int newAge = sc.nextInt();
+
+                                sc.nextLine();
+
+                                System.out.print("Enter New Course: ");
+                                String newCourse = sc.nextLine();
+
+                                System.out.print("Enter New Marks: ");
+                                double newMarks = sc.nextDouble();
+
+                                PreparedStatement psUpdate =
+                                    conn.prepareStatement("UPDATE students SET age=?, course=?, marks=? WHERE id=?");
+                                
+                                psUpdate.setInt(1, newAge);
+                                psUpdate.setString(2, newCourse);
+                                psUpdate.setDouble(3, newMarks);
+                                psUpdate.setInt(4, updateId);
+                                
+                                int rowsUpdated = psUpdate.executeUpdate();
+                                
+                                conn.commit();
+                                
+                                if (rowsUpdated > 0)
+                                    System.out.println("Student Updated Successfully!\n");
+                                else
+                                    System.out.println("Student Not Found!\n");
+                            
+                                break;
+                        
+                            case 5:
+                                System.out.print("Enter Student ID to Delete: ");
+                                int deleteId = sc.nextInt();
+
+                                PreparedStatement psDelete =
+                                    conn.prepareStatement("DELETE FROM students WHERE id=?");
+
+                                psDelete.setInt(1, deleteId);
+
+                                int rowsDeleted = psDelete.executeUpdate();
+
+                                conn.commit();
+
+                                if (rowsDeleted > 0)
+                                    System.out.println(
+                                        "Student Deleted Successfully!\n"
+                                    );
+                                else
+                                    System.out.println(
+                                        "Student Not Found!\n"
+                                    );
+                                break;
+
+                            case 6:
+                                conn.commit();
+                                System.out.println("Exiting Program...");
+                                return;
+
+                            default:
+                                System.out.println("Invalid Choice!\n");
+                        }
+
+                    } catch (Exception e) {
+                        conn.rollback();
+                        System.out.println(
+                            "Error! Transaction rolled back."
+                        );
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println(
+                "Database Error: " + e.getMessage()
+            );
+        }
+    }
+}
+
+//javac -cp ".;mysql-connector-j-9.7.0.jar" StudentManagement.java
+//java -cp ".;mysql-connector-j-9.7.0.jar" StudentManagement
+
+
+
+
+CREATE DATABASE studentdb;
+
+USE studentdb;
+
+CREATE TABLE students (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    course VARCHAR(100),
+    marks DOUBLE
+);
+
+
+
