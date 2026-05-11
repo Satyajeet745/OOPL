@@ -215,7 +215,7 @@ public class StudentManagement {
 
 
 
-CREATE DATABASE studentdb;
+CREATE DATABASE STUDENT_DB;
 
 USE studentdb;
 
