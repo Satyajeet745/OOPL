@@ -1,197 +1,112 @@
-//library
 
-
-
+//hotel booking
 
 import java.util.Scanner;
 
-class Book
-{
-    String bookname;
-    String Author;
-    boolean isIssued;
+public class Hotel {
 
-    static int totalBooks = 0;
+    public static void main(String[] args) {
 
-    // Constructor
-    public Book(String bookname, String Author)
-    {
-        this.bookname = bookname;
-        this.Author = Author;
-        this.isIssued = false;
-
-        totalBooks++;
-    }
-
-    // Display Book
-    void displayBook()
-    {
-        System.out.println("Book Name : " + bookname);
-        System.out.println("Author    : " + Author);
-
-        if(isIssued)
-        {
-            System.out.println("Status    : Issued");
-        }
-        else
-        {
-            System.out.println("Status    : Available");
-        }
-
-        System.out.println(" ");
-    }
-
-    // Issue Book
-    void issueBook()
-    {
-        if(!isIssued)
-        {
-            isIssued = true;
-            System.out.println("Book issued successfully!");
-        }
-        else
-        {
-            System.out.println("Book already issued!");
-        }
-    }
-
-    // Return Book
-    void returnBook()
-    {
-        if(isIssued)
-        {
-            isIssued = false;
-            System.out.println("Book returned successfully!");
-        }
-        else
-        {
-            System.out.println("Book was not issued!");
-        }
-    }
-
-    // Static Method
-    static void getTotalBooks()
-    {
-        System.out.println("Total Books : " + totalBooks);
-    }
-
-    // Main Method
-    public static void main(String[] args)
-    {
         Scanner sc = new Scanner(System.in);
 
-        Book[] arr = new Book[10];
+        int floors = 3;
+        int rooms = 4;
 
-        int n = 0;
+        int[][] hotel = new int[floors][rooms];
+
         int choice;
 
-        // Default Book
-        arr[n] = new Book("RICH DAD POOR DAD", "ROBERT T. KIYOSAKI");
-        n++;
+        do {
 
-        do
-        {
-            System.out.println("\n===== LIBRARY MANAGEMENT SYSTEM =====");
+            System.out.println("\n***** Hotel Booking *****");
+            System.out.println("1. View Available Rooms");
+            System.out.println("2. Book Room");
+            System.out.println("3. Cancel Booking");
+            System.out.println("4. Exit");
 
-            System.out.println("1. Add Book");
-            System.out.println("2. Display Books");
-            System.out.println("3. Issue Book");
-            System.out.println("4. Return Book");
-            System.out.println("5. Total Books");
-            System.out.println("6. Exit");
-
-            System.out.print("Enter choice: ");
+            System.out.print("Enter your choice: ");
             choice = sc.nextInt();
-            sc.nextLine();
 
-            switch(choice)
-            {
+            switch (choice) {
+
                 case 1:
 
-                    System.out.print("Enter Book Name: ");
-                    String name = sc.nextLine();
+                    for (int i = 0; i < floors; i++) {
 
-                    System.out.print("Enter Author Name: ");
-                    String author = sc.nextLine();
+                        System.out.print("Floor " + (i + 1) + ": ");
 
-                    arr[n] = new Book(name, author);
+                        for (int j = 0; j < rooms; j++) {
 
-                    n++;
+                            if (hotel[i][j] == 0) {
 
-                    System.out.println("Book added successfully!");
+                                System.out.print("Room " + (j + 1) + " (Available)  ");
+
+                            } else {
+
+                                System.out.print("Room " + (j + 1) + " (Booked)  ");
+                            }
+                        }
+
+                        System.out.println();
+                    }
 
                     break;
 
                 case 2:
 
-                    for(Book b : arr)
-                    {
-                        if(b != null)
-                        {
-                            b.displayBook();
-                        }
+                    System.out.print("Enter Floor (1-3): ");
+                    int floor = sc.nextInt();
+
+                    System.out.print("Enter Room (1-4): ");
+                    int room = sc.nextInt();
+
+                    // Validation
+                    if (floor < 1 || floor > floors || room < 1 || room > rooms) {
+
+                        System.out.println("Invalid floor or room number!");
+
+                    } else if (hotel[floor - 1][room - 1] == 0) {
+
+                        hotel[floor - 1][room - 1] = 1;
+
+                        System.out.println("Room booked successfully!");
+
+                    } else {
+
+                        System.out.println("Room is already booked!");
                     }
 
                     break;
 
                 case 3:
 
-                    System.out.print("Enter Book Name to Issue: ");
-                    String issueName = sc.nextLine();
+                    System.out.print("Enter Floor (1-3): ");
+                    int f = sc.nextInt();
 
-                    int found1 = 0;
+                    System.out.print("Enter Room (1-4): ");
+                    int r = sc.nextInt();
 
-                    for(Book b : arr)
-                    {
-                        if(b != null && b.bookname.equalsIgnoreCase(issueName))
-                        {
-                            b.issueBook();
-                            found1 = 1;
-                            break;
-                        }
-                    }
+                    // Validation
+                    if (f < 1 || f > floors || r < 1 || r > rooms) {
 
-                    if(found1 == 0)
-                    {
-                        System.out.println("Book not found!");
+                        System.out.println("Invalid floor or room number!");
+
+                    } else if (hotel[f - 1][r - 1] == 1) {
+
+                        hotel[f - 1][r - 1] = 0;
+
+                        System.out.println("Room canceled successfully!");
+
+                    } else {
+
+                        System.out.println("Room is not booked yet!");
                     }
 
                     break;
 
                 case 4:
 
-                    System.out.print("Enter Book Name to Return: ");
-                    String returnName = sc.nextLine();
-
-                    int found2 = 0;
-
-                    for(Book b : arr)
-                    {
-                        if(b != null && b.bookname.equalsIgnoreCase(returnName))
-                        {
-                            b.returnBook();
-                            found2 = 1;
-                            break;
-                        }
-                    }
-
-                    if(found2 == 0)
-                    {
-                        System.out.println("Book not found!");
-                    }
-
-                    break;
-
-                case 5:
-
-                    Book.getTotalBooks();
-
-                    break;
-
-                case 6:
-
-                    System.out.println("Thank You!");
-
+                    System.out.println("Thank you for visiting......");
                     break;
 
                 default:
@@ -199,7 +114,7 @@ class Book
                     System.out.println("Invalid Choice!");
             }
 
-        } while(choice != 6);
+        } while (choice != 4);
 
         sc.close();
     }
